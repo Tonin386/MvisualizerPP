@@ -180,17 +180,38 @@ void clean(vector<Note*> &notes)
 
 void createClusters(vector<ParticleCluster*> &pClusters, vector<Note*> notes)
 {
+	Color clusterColor;
 	for(int i = 0; i < notes.size(); i++)
 	{
-		// if(notes[i]->getChildCluster() == nullptr)
-		// {
-		// 	ParticleCluster *cluster = new ParticleCluster(notes[i], 4, Color(rand() % 10, 10 + rand() % 10, 190 + rand() % 20 - rand() % 20));
-		// 	pClusters.push_back(cluster);
-		// }
 		if(notes[i]->getTimeOff() == -1)
 		{
-			ParticleCluster *clusterA = new ParticleCluster(notes[i], 3, Color(100 + rand() % 10, 100 + rand() % 10, 220 + rand() % 20 - rand() % 20));
-			ParticleCluster *clusterB = new ParticleCluster(notes[i], 4, Color(190 + rand() % 10, 100 + rand() % 10, 190 + rand() % 20 - rand() % 20));
+			int randomType = rand() % 2;
+			switch(randomType)
+			{	
+				default:
+				case 0:
+				{
+					clusterColor = Color(100 + rand() % 10, 100 + rand() % 10, 220 + rand() % 20 - rand() % 20);
+					break;	
+				}
+				case 1:
+				{
+					clusterColor = Color(0, 0, 90);
+					break;
+				} 
+				case 2:
+				{
+					clusterColor = Color(100 + rand() % 10, 100 + rand() % 10, 220 + rand() % 20 - rand() % 20);
+					break;	
+				}
+				case 3:
+				{
+					clusterColor = Color(130 + rand() % 10, 55 + rand() % 10, 130 + rand() % 20 - rand() % 20);
+					break;	
+				}
+			}
+			ParticleCluster *clusterA = new ParticleCluster(notes[i], randomType, clusterColor);
+			ParticleCluster *clusterB = new ParticleCluster(notes[i], 3, Color(130 + rand() % 10, 55 + rand() % 10, 130 + rand() % 20 - rand() % 20));
 			pClusters.push_back(clusterA);
 			pClusters.push_back(clusterB);
 		}

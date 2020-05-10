@@ -23,10 +23,9 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 	default_random_engine gen;
 	int n = 0;
 
-	parentNote->setChild(this);
-
 	switch(_protocol)
 	{
+		default:
 		case 0: //Not full circle
 		{
 			n = _parentNote->getVelocity()/4;
@@ -35,95 +34,65 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 
 		case 1: //Full circle
 		{
-			n = 36;
+			n = 900;
 			break;
 		}
 
-		case 2:
-		{
-			n = _parentNote->getVelocity()/4;
-			break;
-		}
-
-		case 3:
-		{
-			n = _parentNote->getVelocity()/4;
-			_origin.x = ((int)(_parentNote->getNote()*1511453)) % WIDTH;
-			break;
-		}
-
-		case 4:
+		case 2: //Case 0 but random x
 		{
 			n = _parentNote->getVelocity()/8;
-			_origin.x = ((int)(_parentNote->getNote()*1511453)) % WIDTH;
 			break;
 		}
 
-		default:
+		case 3: //Cool waves
 		{
-			n = 7;
+			n = _parentNote->getVelocity()/6;
 			break;
 		}
 	}
 
+
 	for(int i = 0; i < n; i++)
 	{
+		_origin.y = ((int)(_parentNote->getNote()*6845864)) % HEIGHT;
 		double deg = 0;
 		double acceleration = _parentNote->getVelocity()/20 + (double)(rand() % 6000)/(double)1000 - (double)(rand() % 6000)/(double)1000;
 		double accelerationDecay = acceleration/1000;;
 
 		switch(_protocol)
 		{
+			default:
 			case 0:
 			{
 				deg = rand() % 360;
-
-				_origin.x = (int)(PROCESS_TIME.getElapsedTime().asSeconds()*50) % WIDTH;
-				_origin.y = HEIGHT - (int)((_parentNote->getNote() - 21) * (HEIGHT/87));
+				_origin.x = (int)((_parentNote->getNote() - 21) * (WIDTH/87));
 				break;
 			}
 
 			case 1:
 			{
-				deg = (double)i * 10;
-				acceleration  = _parentNote->getVelocity() / 16;
-				_origin.x = (int)(PROCESS_TIME.getElapsedTime().asSeconds()*50) % WIDTH;
-				_origin.y = HEIGHT - (int)((_parentNote->getNote() - 21) * (HEIGHT/87));
+				deg = (double)i * 0.4;
+				acceleration  = _parentNote->getVelocity() / 32;
+				accelerationDecay = 0.005;
+				_origin.x = (int)(_parentNote->getTimeOn() * 10000) % WIDTH;
+				_origin.y = ((int)(_parentNote->getNote()*684864)) % HEIGHT;
+
 				break;
 			}
 
 			case 2:
 			{
 				deg = rand() % 360;
-
 				_origin.x = rand() % WIDTH;
-				_origin.y = HEIGHT - (int)((_parentNote->getNote() - 21) * (HEIGHT/87));
 				break;
 			}
 
 			case 3:
 			{
-				deg = rand() % 360;
-
-				_origin.y = HEIGHT - (int)((_parentNote->getNote() - 21) * (HEIGHT/87));
-				break;
-			}
-
-			case 4:
-			{
 				deg = (int)(PROCESS_TIME.getElapsedTime().asSeconds()*90) % 360;
 				deg = (int)(deg + (180 * (rand() % 2))) % 360;
-
-				_origin.y = HEIGHT - (int)((_parentNote->getNote() - 21) * (HEIGHT/87));
-				break;
-			}
-
-			default:
-			{
-				deg = rand() % 360;
-
-				_origin.x = (int)(PROCESS_TIME.getElapsedTime().asSeconds()*50) % WIDTH;
-				_origin.y = HEIGHT - (int)((_parentNote->getNote() - 21) * (HEIGHT/87));
+				_origin.x = (int)((_parentNote->getNote() - 21) * (WIDTH/87));
+				acceleration *= 4;
 				break;
 			}
 		}
@@ -134,13 +103,21 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 		Color pColor = _color;
 
 		int intensity = 1 + rand() % 5;
-		pColor.r -= intensity*15;
-		pColor.g -= intensity*15;
-		pColor.b -= intensity*15;
+		if(_protocol != 1)
+		{
+			pColor.r -= intensity*10;
+			pColor.g -= intensity*10;
+			pColor.b -= intensity*10;	
+		}
 
-		Particle *p = new Particle(this, acceleration, accelerationDecay, pColor, deg, _origin);
-		_particles.push_back(p);
+		if(_protocol != 1 || _parentNote->getChildCluster() == nullptr)
+		{
+			Particle *p = new Particle(this, acceleration, accelerationDecay, pColor, deg, _origin);
+			_particles.push_back(p);
+		}
 	}
+
+	_parentNote->setChild(this);
 }
 
 void ParticleCluster::moveParticles()

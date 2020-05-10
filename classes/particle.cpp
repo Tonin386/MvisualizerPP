@@ -25,6 +25,21 @@ void Particle::move()
 {
 	switch(_parent->getProtocol())
 	{
+		case 1:
+		{
+			if(_acceleration < 1.5 && _dummy != 1) 
+			{
+				_dummy = 1;
+				_accelerationDecay = 0.1;
+			}
+
+			_position.x += _acceleration * cos(_degrees*PI/180);
+			_position.y += _acceleration * sin(_degrees*PI/180);
+
+			if(_dummy != 1) _acceleration -= _accelerationDecay;
+			else _acceleration += _accelerationDecay;
+			break;
+		}
 		case 4:
 		{
 			if(_acceleration < 1) _active = false;
@@ -36,7 +51,6 @@ void Particle::move()
 			break;
 		}
 		case 0:
-		case 1:
 		case 2:
 		case 3:
 		default:
