@@ -189,8 +189,8 @@ void createClusters(vector<ParticleCluster*> &pClusters, vector<Note*> notes)
 		// }
 		if(notes[i]->getTimeOff() == -1)
 		{
-			ParticleCluster *clusterA = new ParticleCluster(notes[i], 4, Color(100 + rand() % 10, 100 + rand() % 10, 220 + rand() % 20 - rand() % 20));
-			ParticleCluster *clusterB = new ParticleCluster(notes[i], 3, Color(220 + rand() % 10, 100 + rand() % 10, 100 + rand() % 20 - rand() % 20));
+			ParticleCluster *clusterA = new ParticleCluster(notes[i], 3, Color(100 + rand() % 10, 100 + rand() % 10, 220 + rand() % 20 - rand() % 20));
+			ParticleCluster *clusterB = new ParticleCluster(notes[i], 4, Color(190 + rand() % 10, 100 + rand() % 10, 190 + rand() % 20 - rand() % 20));
 			pClusters.push_back(clusterA);
 			pClusters.push_back(clusterB);
 		}

@@ -27,7 +27,7 @@ void Particle::move()
 	{
 		case 4:
 		{
-			if(_acceleration < 0.1) _active = false;
+			if(_acceleration < 1) _active = false;
 			_position.x += _acceleration * cos((_degrees + 30 * sin(_dummy*PI/180))*PI/180);
 			_position.y += _acceleration * sin((_degrees + 30 * sin(_dummy*PI/180))*PI/180);
 			_dummy += 10;
@@ -41,7 +41,7 @@ void Particle::move()
 		case 3:
 		default:
 		{
-			if(_acceleration < 0.05) _active = false;
+			if(_acceleration < 1) _active = false;
 			_position.x += _acceleration * cos(_degrees*PI/180);
 			_position.y += _acceleration * sin(_degrees*PI/180);
 
