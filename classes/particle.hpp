@@ -30,6 +30,8 @@ private:
 	sf::Vector2f 		_position;
 	bool 				_active;
 	ParticleCluster* 	_parent;
+
+	double _dummy;
 };
 
 #endif

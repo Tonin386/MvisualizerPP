@@ -12,7 +12,8 @@ using namespace std;
 Particle::Particle(ParticleCluster* parent, double acceleration, double accelerationDecay, Color color, double degrees, Vector2f position) : _parent(parent), _acceleration(acceleration), _accelerationDecay(accelerationDecay), _color(color), _degrees(degrees), _position(position)
 {
 	_active = true;
-	// cout << "Particle created | Acceleration = " << _acceleration << " | Acceleration Decay = " << _accelerationDecay << " | degrees = " << _degrees << endl;
+	_dummy = 0;
+	// cout << "Particle created | Acceleration = " << _acceleration << " | Acceleration Decay = " << _accelerationDecay << " | degrees = " << _degrees << " | (x,y) = (" << _position.x << ";" << _position.y << ")" <<endl;
 }
 
 void Particle::setOff()
@@ -24,6 +25,20 @@ void Particle::move()
 {
 	switch(_parent->getProtocol())
 	{
+		case 4:
+		{
+			if(_acceleration < 0.1) _active = false;
+			_position.x += _acceleration * cos((_degrees + 30 * sin(_dummy*PI/180))*PI/180);
+			_position.y += _acceleration * sin((_degrees + 30 * sin(_dummy*PI/180))*PI/180);
+			_dummy += 10;
+			_dummy = (int)_dummy % 360;
+			_acceleration -= _accelerationDecay;
+			break;
+		}
+		case 0:
+		case 1:
+		case 2:
+		case 3:
 		default:
 		{
 			if(_acceleration < 0.05) _active = false;
@@ -34,11 +49,9 @@ void Particle::move()
 			break;	
 		}
 	}
+	// cout << "Particle moved | Acceleration = " << _acceleration << " | Acceleration Decay = " << _accelerationDecay << " | degrees = " << _degrees << " | (x,y) = (" << _position.x << ";" << _position.y << ")" <<endl;
 
-	if(_position.x > WIDTH || _position.x < 0)
-		_active = false;
-	if(_position.y > HEIGHT || _position.y < 0)
-		_active = false;
+	if(_position.x > WIDTH || _position.x < 0 || _position.y > HEIGHT || _position.y < 0) _active = false;
 }
 
 double Particle::getAcceleration() const

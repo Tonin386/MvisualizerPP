@@ -63,7 +63,7 @@ int main(int argc, char const *argv[])
 	midiin->ignoreTypes(false, false, false);
 	cout << "Reading MIDI from port " << midiin->getPortName() << "\n";
 
-	RenderWindow window(VideoMode(WIDTH, HEIGHT, BITS), "mvisualizerpp", Style::Fullscreen);
+	RenderWindow window(VideoMode(WIDTH, HEIGHT, BITS), "MVisualizerPP", Style::Fullscreen);
 	window.setVerticalSyncEnabled(true);
 	Color bg(rand() % 11, rand() % 11, 200 + rand() % 25);
 
@@ -98,7 +98,7 @@ int main(int argc, char const *argv[])
 		tickClusters(pClusters);
 		createClusters(pClusters, notes);
 
-		window.clear(Color(20, 20, 20));
+		window.clear();
 		drawParticles(window, pClusters);
 		window.display();
 
@@ -184,13 +184,15 @@ void createClusters(vector<ParticleCluster*> &pClusters, vector<Note*> notes)
 	{
 		// if(notes[i]->getChildCluster() == nullptr)
 		// {
-		// 	ParticleCluster *cluster = new ParticleCluster(notes[i], 0, Color(255,0,0));
+		// 	ParticleCluster *cluster = new ParticleCluster(notes[i], 4, Color(rand() % 10, 10 + rand() % 10, 190 + rand() % 20 - rand() % 20));
 		// 	pClusters.push_back(cluster);
 		// }
 		if(notes[i]->getTimeOff() == -1)
 		{
-			ParticleCluster *cluster = new ParticleCluster(notes[i], rand() % 4, Color(rand() % 10, 10 + rand() % 10, 190 + rand() % 20 - rand() % 20));
-			pClusters.push_back(cluster);
+			ParticleCluster *clusterA = new ParticleCluster(notes[i], 4, Color(100 + rand() % 10, 100 + rand() % 10, 220 + rand() % 20 - rand() % 20));
+			ParticleCluster *clusterB = new ParticleCluster(notes[i], 3, Color(220 + rand() % 10, 100 + rand() % 10, 100 + rand() % 20 - rand() % 20));
+			pClusters.push_back(clusterA);
+			pClusters.push_back(clusterB);
 		}
 	}
 }
@@ -211,7 +213,7 @@ void tickClusters(vector<ParticleCluster*> &pClusters)
 	}
 }
 
-Color drawParticles(RenderWindow &window, vector<ParticleCluster*> pClusters) //piece of shit function
+Color drawParticles(RenderWindow &window, vector<ParticleCluster*> pClusters)
 {
 	VertexArray dots(Quads, 0);
 	int totalDotsCount = 0;

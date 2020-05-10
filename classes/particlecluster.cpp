@@ -52,6 +52,14 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 			break;
 		}
 
+		case 4:
+		{
+			n = _parentNote->getVelocity()/2;
+			_origin.x = ((int)(_parentNote->getTimeOn()*1511453)) % WIDTH;
+			_origin.y = ((int)(_parentNote->getTimeOn()*1511453)) % HEIGHT;
+			break;
+		}
+
 		default:
 		{
 			n = 7;
@@ -69,7 +77,7 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 		{
 			case 0:
 			{
-				deg = rand() % 361;
+				deg = rand() % 360;
 
 				// acceleration = _parentNote->getVelocity() / 32 + (double)rand() / RAND_MAX * (_parentNote->getVelocity()/4 - _parentNote->getVelocity()/4);
 				acceleration = 1 + (rand() % 10000) / 1000;
@@ -90,7 +98,7 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 
 			case 2:
 			{
-				deg = rand() % 361;
+				deg = rand() % 360;
 
 				// acceleration = _parentNote->getVelocity() / 32 + (double)rand() / RAND_MAX * (_parentNote->getVelocity()/4 - _parentNote->getVelocity()/4);
 				acceleration = 1 + (rand() % 10000) / 1000;
@@ -102,18 +110,26 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 
 			case 3:
 			{
-				deg = rand() % 361;
+				deg = rand() % 360;
 
 				// acceleration = _parentNote->getVelocity() / 32 + (double)rand() / RAND_MAX * (_parentNote->getVelocity()/4 - _parentNote->getVelocity()/4);
-				acceleration = 1 + (rand() % 10000) / 1000;
+				acceleration = 0.5 + (rand() % 5000) / 1000;
 
 				_origin.y = HEIGHT - (int)((_parentNote->getNote() - 21) * (HEIGHT/87));
 				break;
 			}
 
+			case 4:
+			{
+				deg = ((int)_origin.x + rand() % 20 - rand() % 20) % 360;
+
+				acceleration = (double)1 + (double)(rand() % 10000) / (double)1000;
+				break;
+			}
+
 			default:
 			{
-				deg = rand() % 361;
+				deg = rand() % 360;
 
 				acceleration = _parentNote->getVelocity() / 64 + (double)rand() / RAND_MAX * (_parentNote->getVelocity()/6 - _parentNote->getVelocity()/6);
 
@@ -126,13 +142,13 @@ ParticleCluster::ParticleCluster(Note* parentNote, int protocol, Color color) : 
 		if(acceleration < 1)
 			acceleration = 1;
 
-		accelerationDecay = acceleration/1600;
+		accelerationDecay = acceleration/3200;
 		Color pColor = _color;
 
-		int intensity = 1 + rand() % 8;
-		pColor.r /= intensity;
-		pColor.g /= intensity;
-		pColor.b /= intensity;
+		int intensity = 1 + rand() % 5;
+		pColor.r -= intensity*15;
+		pColor.g -= intensity*15;
+		pColor.b -= intensity*15;
 
 		Particle *p = new Particle(this, acceleration, accelerationDecay, pColor, deg, _origin);
 		_particles.push_back(p);
